@@ -1,6 +1,15 @@
 import java.util.Stack;
 
 public class FastFourierTransform {
+  public static Complex[] computeFft(double[] input) {
+    Complex[] cps = new Complex[input.length];
+    for (int i = 0; i < input.length; i++) {
+      cps[i] = new Complex(input[i], 0.0);
+    }
+
+    return computeFft(cps);
+  }
+
   public static Complex[] computeFft(Complex[] cps) {
     return computeFft(cps, new Stack<>(), cps.length, 0, 1);
   }
