@@ -6,7 +6,8 @@ import java.util.List;
 public class Main {
   public static void main(String[] args) throws UnsupportedAudioFileException, IOException {
     String filePath = "src\\main\\java\\Middle C.wav";
-    List<Double> frequenciesFound = AudioReader.getFrequencies(filePath);
+    AudioFrequencyInfo audioFrequencyInfo = AudioReader.getAudioFrequencyInfo(filePath);
+    List<Double> frequenciesFound = audioFrequencyInfo.getFrequencies();
     for (int i = 0; i < frequenciesFound.size(); i++) {
       double frequencyFound = frequenciesFound.get(i);
       if ((254.0 < frequencyFound) && (frequencyFound < 268.0)) {

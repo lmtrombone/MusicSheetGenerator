@@ -7,17 +7,20 @@ import java.util.List;
 public class AudioReader {
   private static final int BUF_SIZE = 8192;
 
-  public static List<Double> getFrequencies(String filePath) throws UnsupportedAudioFileException, IOException {
-    AudioInputStream audioInputStream = null;
+  public static AudioFrequencyInfo getAudioFrequencyInfo(String filePath) throws UnsupportedAudioFileException, IOException {
+    AudioFrequencyInfo audioFrequencyInfo = new AudioFrequencyInfo();
     List<Double> frequenciesFound = new ArrayList<>();
+    audioFrequencyInfo.setFrequencies(frequenciesFound);
 
-    try {
-      audioInputStream = AudioSystem.getAudioInputStream(new File(filePath));
+    try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(filePath))) {
       AudioFormat audioFormat = audioInputStream.getFormat();
-      byte[] buf = new byte[BUF_SIZE];
+      audioFrequencyInfo.setAudioFormat(audioFormat);
+      audioFrequencyInfo.setSampleSize(BUF_SIZE / audioFormat.getFrameSize());
 
-      while (audioInputStream.read(buf) != -1) {
-        double[] samples = getSamples(buf, audioFormat);
+      byte[] buf = new byte[BUF_SIZE];
+      int bytesRead;
+      while ((bytesRead = audioInputStream.read(buf)) != -1) {
+        double[] samples = getSamples(buf, bytesRead, audioFormat);
         Complex[] fft = FastFourierTransform.computeFft(samples);
         double[] magnitudes = convertFftToMagnitudes(fft);
 
@@ -27,44 +30,27 @@ public class AudioReader {
 
         frequenciesFound.add(frequencyFound);
       }
-    } finally {
-      if (audioInputStream != null) {
-        audioInputStream.close();
-      }
     }
 
-    return frequenciesFound;
+    return audioFrequencyInfo;
   }
 
-  private static double[] getSamples(byte[] buf, AudioFormat format) {
+  private static double[] getSamples(byte[] buf, int bytesRead, AudioFormat format) {
     int arrSize = buf.length / format.getFrameSize();
-    boolean isArrSizePowerOfTwo = isNumPowerOfTwo(arrSize);
-    if (!isArrSizePowerOfTwo) {
-      arrSize = getNextPowerOfTwo(arrSize);
-    }
-
     double[] dbuf = new double[arrSize];
-    for (int pos = 0; pos < buf.length; pos += format.getFrameSize()) {
+    for (int pos = 0; pos < bytesRead; pos += format.getFrameSize()) {
       int sample = format.isBigEndian()
           ? byteToIntBigEndian(buf, pos, format.getFrameSize())
           : byteToIntLittleEndian(buf, pos, format.getFrameSize());
       dbuf[pos / format.getFrameSize()] = sample;
     }
 
-    if (!isArrSizePowerOfTwo) {
-      for (int i = buf.length; i < arrSize; i++) {
+    if (bytesRead != buf.length) {
+      for (int i = bytesRead; i < arrSize; i++) {
         dbuf[i] = 0.0;
       }
     }
     return dbuf;
-  }
-
-  private static boolean isNumPowerOfTwo(int num) {
-    return (num > 0) && ((num & (num - 1)) == 0);
-  }
-
-  private static int getNextPowerOfTwo(int num) {
-    return (int) Math.pow(2, Math.ceil(Math.log(num) / Math.log(2)));
   }
 
   private static int byteToIntBigEndian(byte[] buf, int offset, int bytesPerSample) {
