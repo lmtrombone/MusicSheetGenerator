@@ -29,6 +29,12 @@ public class Complex {
     return new Complex(re, im);
   }
 
+  public double getMagnitude() {
+    double re = this.getRe();
+    double im = this.getIm();
+    return Math.sqrt(re * re + im * im);
+  }
+
   public double getRe() {
     return re;
   }
