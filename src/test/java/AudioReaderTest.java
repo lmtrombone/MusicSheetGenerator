@@ -16,6 +16,7 @@ public class AudioReaderTest {
 
     Assert.assertEquals(audioFormat.getSampleRate(), 48000);
     Assert.assertTrue(isFrequencyFound(audioFrequencyInfo.getFrequencies(), 257.8125));
+    Assert.assertEquals(audioFrequencyInfo.getSampleSize(), 2048);
   }
 
   private boolean isFrequencyFound(List<Double> frequenciesFound, double expectedFrequency) {
