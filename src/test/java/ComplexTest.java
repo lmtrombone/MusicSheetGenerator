@@ -34,4 +34,15 @@ public class ComplexTest {
 
     Assert.assertEquals(actualResult, expectedResult);
   }
+
+  @Test
+  public void testMagnitude() {
+    Complex cp = new Complex(6.0, 8.0);
+
+    double actualMagnitude = cp.getMagnitude();
+    double expectedMagnitude = 10.0;
+
+    Assert.assertEquals(actualMagnitude, expectedMagnitude);
+  }
+
 }
