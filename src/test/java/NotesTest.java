@@ -11,7 +11,7 @@ public class NotesTest {
   }
 
   @Test
-  public void testKeyNumForInvalidFrequency() {
+  public void testFindKeyNumForInvalidFrequency() {
     int actualKeyNum = Notes.findKeyNumFromFrequency(255.0);
     int expectedKeyNum = -1;
 
