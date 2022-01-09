@@ -35,6 +35,28 @@ public class Notes {
     return keyNum;
   }
 
+  public static String getScientificPitchNotation(int keyNum) {
+    int octave = (int) Math.ceil((keyNum - 3) / 12.0);
+    int moddedKeyNum = (keyNum + 8) % 12;
+    String pitchName = switch(moddedKeyNum) {
+      case 0 -> "C";
+      case 1 -> "C#/Db";
+      case 2 -> "D";
+      case 3 -> "D#/Eb";
+      case 4 -> "E";
+      case 5 -> "F";
+      case 6 -> "F#/Gb";
+      case 7 -> "G";
+      case 8 -> "G#/Ab";
+      case 9 -> "A";
+      case 10 -> "A#/Bb";
+      case 11 -> "B";
+      default -> throw new IllegalStateException("Illegal key num found " + keyNum); // handle irrelevant negative cases
+    };
+
+    return pitchName + octave;
+  }
+
   private static double findFrequency(int keyNum, int cents) {
     double exponent = (((keyNum - 49) * 100) + cents) / 1200.0;
     return Math.pow(2, exponent) * FREQ_OF_A4;

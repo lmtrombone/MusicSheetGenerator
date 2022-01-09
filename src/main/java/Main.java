@@ -8,11 +8,10 @@ public class Main {
     String filePath = "src\\test\\resources\\Middle C.wav";
     AudioFrequencyInfo audioFrequencyInfo = AudioReader.getAudioFrequencyInfo(filePath);
     List<Double> frequenciesFound = audioFrequencyInfo.getFrequencies();
-    for (int i = 0; i < frequenciesFound.size(); i++) {
-      double frequencyFound = frequenciesFound.get(i);
+    for (double frequencyFound : frequenciesFound) {
       int keyNum = Notes.findKeyNumFromFrequency(frequencyFound);
       if (keyNum != -1) {
-        System.out.printf("Note %d found!%n", keyNum);
+        System.out.printf("%s found!%n", Notes.getScientificPitchNotation(keyNum));
       }
     }
   }

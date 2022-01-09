@@ -1,4 +1,5 @@
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class NotesTest {
@@ -16,5 +17,23 @@ public class NotesTest {
     int expectedKeyNum = -1;
 
     Assert.assertEquals(actualKeyNum, expectedKeyNum);
+  }
+
+  @DataProvider
+  public Object[][] keyNumPitchData() {
+    return new Object[][] {
+        { 1, "A0" },
+        { 4, "C1" },
+        { 10, "F#/Gb1" },
+        { 15, "B1" },
+        { 16, "C2"},
+        { 88, "C8"}
+    };
+  }
+
+  @Test(dataProvider = "keyNumPitchData")
+  public void testScientificPitchNotation(int keyNum, String expectedScientificPitchNotation) {
+    String actualScientificPitchNotation = Notes.getScientificPitchNotation(keyNum);
+    Assert.assertEquals(actualScientificPitchNotation, expectedScientificPitchNotation);
   }
 }
