@@ -5,7 +5,7 @@ import java.util.List;
 // temp initializer class with hardcoded input
 public class Main {
   public static void main(String[] args) throws UnsupportedAudioFileException, IOException {
-    String filePath = "src\\test\\resources\\Middle C.wav";
+    String filePath = "src/test/resources/Piano.ff.C4.aif";
     AudioFrequencyInfo audioFrequencyInfo = AudioReader.getAudioFrequencyInfo(filePath);
     List<Double> frequenciesFound = audioFrequencyInfo.getFrequencies();
     for (double frequencyFound : frequenciesFound) {

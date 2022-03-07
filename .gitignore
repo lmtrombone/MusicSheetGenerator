@@ -1,4 +1,5 @@
 /out/
 /.idea/
-/MusicSheetGenerator.iml
+*.iml
 /lib/
+*.DS_Store
